@@ -41,7 +41,7 @@ for song in track_id:
         if(keys=="type"):
             break
         names.append(keys)
-        list_no_sep = list_no_sep + keys+','
+
         data.append(float(r.json()[keys]))
 
     if i == 0:
@@ -52,7 +52,7 @@ for song in track_id:
         df2 = pd.DataFrame([[data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10]]],columns=names)
         df = df.append(df2, ignore_index=True)
 
-
+print(df)
 
 
 

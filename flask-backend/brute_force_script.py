@@ -32,27 +32,32 @@ track_id = [
 ]
 
 i = 0
+
 for song in track_id:
     r = requests.get(endpoint + song, headers=auth_header)
     names =  []
+
+    #we would get this answer from the front end.
+    rate = int(input("What do you rate this song, out of 5: "))
 
     data = []
     for keys in r.json():
         if(keys=="type"):
             break
         names.append(keys)
-
         data.append(float(r.json()[keys]))
+
 
     if i == 0:
         #creating the data frame for the first time
-        df = pd.DataFrame([[data[0], data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[8],data[9],data[10]]  ], columns=names)
+        df = pd.DataFrame([[   data[0]*rate, data[1]*rate,data[2]*rate,data[3]*rate,data[4]*rate,data[5]*rate,data[6]*rate,data[7]*rate,data[8]*rate,data[9]*rate,data[10]*rate]  ], columns=names)
         i = i +1
     else:
-        df2 = pd.DataFrame([[data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8], data[9], data[10]]],columns=names)
+        df2 = pd.DataFrame([[data[0]*rate, data[1]*rate, data[2]*rate, data[3]*rate, data[4]*rate, data[5]*rate, data[6]*rate, data[7]*rate, data[8]*rate, data[9]*rate, data[10]*rate]],columns=names)
         df = df.append(df2, ignore_index=True)
 
 print(df)
+print(df.sum(axis=0))
 
 
 

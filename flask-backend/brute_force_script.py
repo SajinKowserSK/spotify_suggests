@@ -33,6 +33,7 @@ i = 0
 # just using these as dummy values rn so I don't have to add in user input everytime (commented out user rate)
 stars = [4,5]
 songNum = 0
+colNames = []
 for song in track_id:
     r = requests.get(endpoint + song, headers=auth_header)
 
@@ -55,7 +56,9 @@ for song in track_id:
     if i == 0:
         #creating the data frame for the first time
         df = pd.DataFrame([[   data[0]*rate, data[1]*rate,data[2]*rate,data[3]*rate,data[4]*rate,data[5]*rate,data[6]*rate,data[7]*rate,data[8]*rate,data[9]*rate,data[10]*rate]  ], columns=names)
+        track1 = df.copy()
         i = i +1
+        colNames = names
     else:
         df2 = pd.DataFrame([[data[0]*rate, data[1]*rate, data[2]*rate, data[3]*rate, data[4]*rate, data[5]*rate, data[6]*rate, data[7]*rate, data[8]*rate, data[9]*rate, data[10]*rate]],columns=names)
         df = df.append(df2, ignore_index=True)
@@ -81,7 +84,22 @@ for index, row in user_profile.iterrows():
     user_profile.iloc[rowNum, NEW_COL] = user_profile.iloc[rowNum, OLD_COL] / user_profile_totals
     rowNum += 1
 
-print(user_profile)
-print('\n', user_profile['Weighted_Values'].sum())
 
+# creating the matrix / row with user's preferred values for each feature
+weighted_mtx = user_profile['Weighted_Values'].to_list()
+track1_mtx = track1.values.tolist()[0]
 
+print(weighted_mtx)
+print(track1_mtx)
+
+prediction_vals = []
+
+for x in range(0, len(weighted_mtx)):
+    prediction_vals.append(weighted_mtx[x] * track1_mtx[x])
+
+print('\n', 'chance as decimal user will like song')
+print(sum(prediction_vals))
+
+# code to convert to dataframe
+# weighted_matrix = [weighted_matrix]
+# weighted_matrix = pd.DataFrame(weighted_matrix, columns=colNames)

@@ -56,3 +56,19 @@ class SpotifyAPI(object):
         self.access_token_expires = expires
         self.access_token_did_expire = expires < now
         return True
+
+
+## Stuff to put in git ignore file when making repo public
+client_id = 'aaf30baaa7ca45878db0454df408e8a3'
+client_secret = 'c1fd3a9cdc544005be49aef9e2ab3434'
+
+token_url = "https://accounts.spotify.com/api/token"
+method = "POST"
+
+## performing authorization with auth class
+spotify = SpotifyAPI(client_id, client_secret)
+spotify.perform_auth()
+access_token = spotify.access_token
+auth_header = {
+    "Authorization": f'Bearer {access_token}'
+}

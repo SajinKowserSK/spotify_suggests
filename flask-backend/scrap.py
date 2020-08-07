@@ -5,4 +5,7 @@ names = ['danceability', 'energy', 'key', 'loudness', 'mode', 'speechiness', 'ac
 mtx = [lst]
 
 df = pd.DataFrame(mtx, columns=names)
-print(df)
+
+
+for x in range (0, 10000):
+    print(x)

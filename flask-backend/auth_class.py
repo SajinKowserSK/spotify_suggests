@@ -3,6 +3,7 @@
 import base64
 import datetime
 import requests
+from urllib.parse import urlencode
 
 class SpotifyAPI(object):
     access_token = None
@@ -56,6 +57,49 @@ class SpotifyAPI(object):
         self.access_token_expires = expires
         self.access_token_did_expire = expires < now
         return True
+
+    def get_access_token(self):
+        token = self.access_token
+        expires = self.access_token_expires
+        now = datetime.datetime.now()
+        if expires < now:
+            self.perform_auth()
+            return self.get_access_token()
+        elif token == None:
+            self.perform_auth()
+            return self.get_access_token()
+        return token
+
+    def get_resource_header(self):
+        access_token = self.get_access_token()
+        headers = {
+            "Authorization": f"Bearer {access_token}"
+        }
+        return headers
+
+    def get_resource(self, lookup_id, resource_type='albums', version='v1'):
+        endpoint = f"https://api.spotify.com/{version}/{resource_type}/{lookup_id}"
+        headers = self.get_resource_header()
+        r = requests.get(endpoint, headers=headers)
+        if r.status_code not in range(200, 299):
+            return {}
+        return r.json()
+
+    def get_album(self, _id):
+        return self.get_resource(_id, resource_type='albums')
+
+    def get_artist(self, _id):
+        return self.get_resource(_id, resource_type='artists')
+
+    def search(self, query, search_type='artist'):  # type
+        headers = self.get_resource_header()
+        endpoint = "https://api.spotify.com/v1/search"
+        data = urlencode({"q": query, "type": search_type.lower()})
+        lookup_url = f"{endpoint}?{data}"
+        r = requests.get(lookup_url, headers=headers)
+        if r.status_code not in range(200, 299):
+            return {}
+        return r.json()
 
 
 ## Stuff to put in git ignore file when making repo public

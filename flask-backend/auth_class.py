@@ -101,6 +101,14 @@ class SpotifyAPI(object):
             return {}
         return r.json()
 
+    def getTracks(self):
+        headers = self.get_resource_header()
+        endpoint = "'https://api.spotify.com/v1/playlists/37i9dQZF1DX0XUsuxWHRQd/tracks"
+        r = requests.get(endpoint, headers=headers)
+        if r.status_code not in range(200, 299):
+            return {}
+        return r.json()
+
 
 ## Stuff to put in git ignore file when making repo public
 client_id = 'aaf30baaa7ca45878db0454df408e8a3'

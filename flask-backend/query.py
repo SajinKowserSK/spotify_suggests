@@ -21,16 +21,17 @@ for elem in test:
         if key['name'] == track and key['id'] == track_id:
             tracksList.append(key['tracks']['href'])
 
-print(tracksList)
+
 trackDict = {}
+
 for tracks in tracksList:
-    tracks = "https://api.spotify.com/v1/playlists/37i9dQZF1DX0XUsuxWHRQd/tracks"
     r = requests.get(tracks, headers=spotify.get_resource_header())
     r = r.json()['items']
     for key in r:
         track = key['track']
         if track is not None:
-            print(track['name'])
-            trackDict[track['name']] = track['id']
+            if track['id'] not in trackDict:
+                trackDict[track['id']] = track['name']
 
-print(trackDict)
+track_id_final = list(trackDict.keys())
+

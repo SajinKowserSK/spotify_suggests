@@ -1,16 +1,14 @@
 from auth_class import *
 import requests
 import pandas as pd
+from query import *
 from urllib.parse import urlencode
 
 ## endpoint (will always remain same for us), track_id should be changed dynamically
 endpoint = 'https://api.spotify.com/v1/audio-features/'
 
 # This will be a dynamic list of songs that we find, for now we have two, this just dynamically adds the songs data, to the matrix in a formatted way
-track_id = [
-'06AKEBrKUckW0KREUWRnvT',
-'6rqhFgbbKwnb9MLmUQDhG6'
-]
+track_id = track_id_final
 
 
 i = 0

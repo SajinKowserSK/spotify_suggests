@@ -110,6 +110,13 @@ class SpotifyAPI(object):
         return r.json()
 
 
+def getTrack(id):
+    track = requests.get("https://api.spotify.com/v1/tracks/" + str(id), headers=spotify.get_resource_header()).json()
+    artist = track['artists'][0]['name']
+    songName = track['name']
+    print("Now playing", songName, "by", artist)
+
+
 ## Stuff to put in git ignore file when making repo public
 client_id = 'aaf30baaa7ca45878db0454df408e8a3'
 client_secret = 'c1fd3a9cdc544005be49aef9e2ab3434'

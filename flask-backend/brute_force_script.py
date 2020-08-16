@@ -1,30 +1,63 @@
 from auth_class import *
-import requests
-import pandas as pd
 from query import *
+import requests
 from urllib.parse import urlencode
+import random
+import pandas as pd
+import sys
+db_df = pd.read_csv("1. Songs Analyzed.csv")
+db_df = pd.DataFrame(db_df)
+randomSongs = []
 
-## endpoint (will always remain same for us), track_id should be changed dynamically
+print(db_df.iloc[0]['id'])
+######################### generating 3 random song id indices
+for x in range(0, 3):
+    i = random.randint(0, 430)
+
+    while i in randomSongs:
+        i = random.randint(0, 430)
+
+    randomSongs.append(i)
+
+######################### getting the random songs by ID
+for x in range(0, 3):
+    i = random.randint(0, 430)
+
+    while i in randomSongs:
+        i = random.randint(0, 430)
+
+    randomSongs.append(i)
+
+randomSongID = []
+for x in range (0, len(randomSongs)):
+    randomSongID.append(db_df.iloc[randomSongs[x]]['id'])
+
+
+######################### deleting them from db
+db_df = db_df.drop([db_df.index[randomSongs[0]], db_df.index[randomSongs[1]], db_df.index[randomSongs[2]]])
+db_df = db_df.reset_index(drop=True)
+
+
+######################### getting user ratings or "stars"
+stars = []
+for x in range (0, len(randomSongID)):
+    getTrack(randomSongID[x])
+    response = int(input("Please rate this song out of 5"))
+    stars.append(response)
+
+
+######################### creating user profile with audio analysis on songs THEY RATED
 endpoint = 'https://api.spotify.com/v1/audio-features/'
-
-# This will be a dynamic list of songs that we find, for now we have two, this just dynamically adds the songs data, to the matrix in a formatted way
-track_id = track_id_final
-
+track_id = randomSongID
 
 i = 0
-
-# just using these as dummy values rn so I don't have to add in user input everytime (commented out user rate)
-stars = [4,5]
 songNum = 0
 colNames = []
+
 for song in track_id:
     r = requests.get(endpoint + song, headers=auth_header)
 
-    names =  []
-
-    #we would get this answer from the front end.
-    # rate = int(input("What do you rate this song, out of 5: "))
-
+    names = []
     rate = stars[songNum]
     data = []
 
@@ -72,15 +105,14 @@ for song in track_id:
 
     songNum += 1
 
-## now we have a user profile (unweighted)
-print(df)
+# print(df)
 
+######################### creating user profile with audio analysis on songs THEY RATED
 user_profile = df.sum(axis=0)
-user_profile = pd.DataFrame(user_profile, columns=['Values'])
+user_profile = pd.DataFrame(user_profile, columns=['Value Totals'])
 user_profile['Weighted_Values'] = 0
 
-# gets the total of values, we must now divide each feature val by this total
-user_profile_totals = user_profile['Values'].sum()
+user_profile_totals = user_profile['Value Totals'].sum()
 
 rowNum = 0
 NEW_COL = 1
@@ -91,7 +123,6 @@ for index, row in user_profile.iterrows():
     user_profile.iloc[rowNum, NEW_COL] = user_profile.iloc[rowNum, OLD_COL] / user_profile_totals
     rowNum += 1
 
-print(user_profile)
 # creating the matrix / row with user's preferred values for each feature
 weighted_mtx = user_profile['Weighted_Values'].to_list()
 track1_mtx = track1.values.tolist()[0]

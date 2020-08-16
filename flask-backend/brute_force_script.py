@@ -9,7 +9,7 @@ db_df = pd.read_csv("1. Songs Analyzed.csv")
 db_df = pd.DataFrame(db_df)
 randomSongs = []
 
-print(db_df.iloc[0]['id'])
+
 ######################### generating 3 random song id indices
 for x in range(0, 3):
     i = random.randint(0, 430)
@@ -19,40 +19,33 @@ for x in range(0, 3):
 
     randomSongs.append(i)
 
-######################### getting the random songs by ID
-for x in range(0, 3):
-    i = random.randint(0, 430)
-
-    while i in randomSongs:
-        i = random.randint(0, 430)
-
-    randomSongs.append(i)
 
 randomSongID = []
 for x in range (0, len(randomSongs)):
     randomSongID.append(db_df.iloc[randomSongs[x]]['id'])
 
 
-######################### deleting them from db
+#########################  deleting from db
 db_df = db_df.drop([db_df.index[randomSongs[0]], db_df.index[randomSongs[1]], db_df.index[randomSongs[2]]])
 db_df = db_df.reset_index(drop=True)
 
-
+david = db_df.copy()
 ######################### getting user ratings or "stars"
-stars = []
+ratings = []
+print(randomSongID)
+
 for x in range (0, len(randomSongID)):
     getTrack(randomSongID[x])
     response = int(input("Please rate this song out of 5"))
-    stars.append(response)
-
+    ratings.append(response)
 
 ######################### creating user profile with audio analysis on songs THEY RATED
 endpoint = 'https://api.spotify.com/v1/audio-features/'
 track_id = randomSongID
-
 i = 0
 songNum = 0
 colNames = []
+stars = ratings
 
 for song in track_id:
     r = requests.get(endpoint + song, headers=auth_header)
@@ -104,7 +97,6 @@ for song in track_id:
         df = df.append(df2, ignore_index=True)
 
     songNum += 1
-
 # print(df)
 
 ######################### creating user profile with audio analysis on songs THEY RATED
@@ -123,41 +115,8 @@ for index, row in user_profile.iterrows():
     user_profile.iloc[rowNum, NEW_COL] = user_profile.iloc[rowNum, OLD_COL] / user_profile_totals
     rowNum += 1
 
-# creating the matrix / row with user's preferred values for each feature
-weighted_mtx = user_profile['Weighted_Values'].to_list()
-track1_mtx = track1.values.tolist()[0]
-track2_mtx = track2.values.tolist()[0]
-
-print(weighted_mtx)
-print(track1_mtx, '\n')
-
-prediction_vals = []
-
-for x in range(0, len(weighted_mtx)):
-    prediction_vals.append(weighted_mtx[x] * track1_mtx[x])
-
-
-print('chance as decimal user will like song')
-print(sum(prediction_vals))
-
-for x in range(0, len(prediction_vals)):
-    print(colNames[x] + " val is " + str(prediction_vals[x]))
-
-print("\n", "\n")
-
-prediction_vals = []
-for x in range(0, len(weighted_mtx)):
-    prediction_vals.append(weighted_mtx[x] * track2_mtx[x])
-
-print('chance as decimal user will like song')
-print(sum(prediction_vals))
-
-for x in range(0, len(prediction_vals)):
-    print(colNames[x] + " val is " + str(prediction_vals[x]))
-
-for x in range(0, len(track1_mtx)):
-    print("Track 1 Feature Val is " + str(track1_mtx[x]))
-
-# code to convert to dataframe
-# weighted_matrix = [weighted_matrix]
-# weighted_matrix = pd.DataFrame(weighted_matrix, columns=colNames)
+# user's preferred vals
+preferred_vals = user_profile['Weighted_Values'].to_list()
+result = analyze(preferred_vals, db_df)
+print(result)
+getTrack(result['id'])

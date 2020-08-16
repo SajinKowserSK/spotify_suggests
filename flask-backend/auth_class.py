@@ -117,6 +117,29 @@ def getTrack(id):
     print("Now playing", songName, "by", artist)
 
 
+def analyze(preferred_vals, db):
+    bestSong = {}
+    bestSong['id'] = "None"
+    bestSong['chance'] = 0
+
+    counter = 0
+    for index, row in db.iterrows():
+        currSong_vals = db.iloc[counter].to_list()
+        song_id = currSong_vals.pop(0)
+
+        prediction_vals = []
+        for x in range(0, len(preferred_vals)):
+            prediction_vals.append(preferred_vals[x] * currSong_vals[x])
+
+        curr_chance = sum(prediction_vals)
+        if curr_chance > bestSong['chance']:
+            bestSong['id'] = song_id
+            bestSong['chance'] = curr_chance
+
+        counter += 1
+
+    return bestSong
+
 ## Stuff to put in git ignore file when making repo public
 client_id = 'aaf30baaa7ca45878db0454df408e8a3'
 client_secret = 'c1fd3a9cdc544005be49aef9e2ab3434'

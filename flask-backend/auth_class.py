@@ -131,7 +131,9 @@ def analyze(preferred_vals, db):
         for x in range(0, len(preferred_vals)):
             prediction_vals.append(preferred_vals[x] * currSong_vals[x])
 
+
         curr_chance = sum(prediction_vals)
+        print("This is the vlaue of the best song " + str(curr_chance))
         if curr_chance > bestSong['chance']:
             bestSong['id'] = song_id
             bestSong['chance'] = curr_chance

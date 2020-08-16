@@ -3,13 +3,16 @@ import sys
 import requests
 
 tracksList = []
-test = [("RapCaviar", "37i9dQZF1DX0XUsuxWHRQd"),
-        ("Most Necessary", "37i9dQZF1DX2RxBh64BHjQ"),
-        ("Gold School", "37i9dQZF1DWVA1Gq4XHa6U"),
-        ("Signed XOXO", "37i9dQZF1DX2A29LI7xHn1"),
-        ("Feelin' Myself", "37i9dQZF1DX6GwdWRQMQpq"),
-        ("I Love My '80s Hip-Hop", "37i9dQZF1DX2XmsXL2WBQd"),
-        ("I Love My Down South Classics", "37i9dQZF1DWYok9l1JL7GM")
+test = [('RapCaviar', '37i9dQZF1DX0XUsuxWHRQd'),
+('Most Necessary', '37i9dQZF1DX2RxBh64BHjQ'),
+('Gold School', '37i9dQZF1DWVA1Gq4XHa6U'),
+('Signed XOXO', '37i9dQZF1DX2A29LI7xHn1'),
+("Feelin' Myself", '37i9dQZF1DX6GwdWRQMQpq'),
+('I Love My Down South Classics', '37i9dQZF1DWYok9l1JL7GM'),
+("Hip Hop Controller", "37i9dQZF1DWT5MrZnPU1zD"),
+("Internet People: The Internet Money Takeover", "37i9dQZF1DX6OgmB2fwLGd"),
+("Tear Drop", "37i9dQZF1DX6xZZEgC9Ubl"),
+("Signed XOXO", "37i9dQZF1DX2A29LI7xHn1")
         ]
 
 for elem in test:

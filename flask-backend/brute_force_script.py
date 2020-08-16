@@ -11,7 +11,7 @@ randomSongs = []
 
 
 ######################### generating 3 random song id indices
-for x in range(0, 3):
+for x in range(0, 10):
     i = random.randint(0, 430)
 
     while i in randomSongs:

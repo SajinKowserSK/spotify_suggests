@@ -1,23 +1,26 @@
-import flask
-from flask import Flask, render_template, request, jsonify
 import requests
-from requests import request
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import pandas as pd
-import random
-from random import randint
 from auth_class import *
 
 app = Flask(__name__)
+app.secret_key = "shafibullah"
+app.run(debug=True)
 
 @app.route("/")
 def my_index():
     return render_template("index.html", token="Hello Flask + React")
 
+@app.route("/testEP", methods = ["GET", "POST"])
+def testEP():
+    if request.method == "GET":
+        return "HELLO WORLD new 3"
+
+    else:
+        return "else case"
 
 
-# this endpoint explains how we will be communicating "generally" from backend to frontend
-# without all the math. When done reading this, read the next endpoint (just "ep")
-@app.route("/ep_simple" ,methods=['POST', 'GET'])
+@app.route('/ep_simple',methods=['GET', 'POST'])
 def ep_simple():
 
     # sending random songs to front end
@@ -26,8 +29,6 @@ def ep_simple():
 
         # result will be in form {"randomSongs": randomSongID, "dataframe":db_df}
         result = getRandomSongs(db_df)
-        result["ratings"] = []
-        result["finalSong"] = []
 
         # now json structure should be
         # {
@@ -53,9 +54,8 @@ def ep_simple():
         #  }
 
         return jsonify(data)
-
 # endpoint where axios will make the get and post requests
-@app.route("/ep" ,methods=['POST', 'GET'])
+@app.route("/ep", methods=['POST', 'GET'])
 def ep():
 
     # sending random songs to front end
@@ -164,4 +164,3 @@ def get_current_time():
     return {'time':10}
 
 
-app.run(debug=True)

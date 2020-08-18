@@ -147,7 +147,7 @@ def analyze(preferred_vals, db):
 def getRandomSongs(db_df):
     db_df = pd.DataFrame(db_df)
     randomSongs = []
-    for x in range(0, 10):
+    for x in range(0, 3):
         i = random.randint(0, 430)
         while i in randomSongs:
             i = random.randint(0, 430)
@@ -158,7 +158,7 @@ def getRandomSongs(db_df):
     db_df = db_df.drop([db_df.index[randomSongs[0]], db_df.index[randomSongs[1]], db_df.index[randomSongs[2]]])
     db_df = db_df.reset_index(drop=True)
     db_df = db_df.to_dict()
-    returnDict = {"randomSongs": randomSongID, "dataframe":db_df}
+    returnDict = {"ratings": [], "finalSong": [], "randomSongs": randomSongID, "dataframe":db_df}
     return returnDict
 
 

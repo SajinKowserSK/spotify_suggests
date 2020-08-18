@@ -17,8 +17,8 @@ def my_index():
 
 # this endpoint explains how we will be communicating "generally" from backend to frontend
 # without all the math. When done reading this, read the next endpoint (just "ep")
-@app.route("/ep-training" ,methods=['POST', 'GET'])
-def ep():
+@app.route("/ep_simple" ,methods=['POST', 'GET'])
+def ep_simple():
 
     # sending random songs to front end
     if request.method == "GET":

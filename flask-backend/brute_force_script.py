@@ -9,6 +9,45 @@ db_df = pd.read_csv("1. Songs Analyzed.csv")
 db_df = pd.DataFrame(db_df)
 randomSongs = []
 
+def getRandomSongs(db_df):
+    db_df = pd.DataFrame(db_df)
+    randomSongs = []
+
+    for x in range(0, 10):
+        i = random.randint(0, 430)
+
+        while i in randomSongs:
+            i = random.randint(0, 430)
+
+        randomSongs.append(i)
+    randomSongID = []
+    for x in range(0, len(randomSongs)):
+        randomSongID.append(db_df.iloc[randomSongs[x]]['id'])
+
+    db_df = db_df.drop([db_df.index[randomSongs[0]], db_df.index[randomSongs[1]], db_df.index[randomSongs[2]]])
+    db_df = db_df.reset_index(drop=True)
+
+    returnDict = {"randomSongs": randomSongID, "dataframe":db_df}
+    return returnDict
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ######################### generating 3 random song id indices
 for x in range(0, 10):

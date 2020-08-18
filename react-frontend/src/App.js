@@ -15,6 +15,13 @@ class App extends React.Component {
         link.rel = 'stylesheet';
         link.href = 'https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css'
         headID.appendChild(link);
+
+
+    fetch('/time').then(res => res.json()).then(data => {
+      console.log(data.time)
+    });
+
+
   }
 
 

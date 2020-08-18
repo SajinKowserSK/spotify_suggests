@@ -135,13 +135,13 @@ def analyze(preferred_vals, db):
 
 
         curr_chance = sum(prediction_vals)
-        print("This is the vlaue of the best song " + str(curr_chance))
+        # print("This is the vlaue of the best song " + str(curr_chance))
         if curr_chance > bestSong['chance']:
             bestSong['id'] = song_id
             bestSong['chance'] = curr_chance
 
         counter += 1
-
+    print(bestSong)
     return bestSong
 
 def getRandomSongs(db_df):
@@ -155,10 +155,8 @@ def getRandomSongs(db_df):
     randomSongID = []
     for x in range(0, len(randomSongs)):
         randomSongID.append(db_df.iloc[randomSongs[x]]['id'])
-    db_df = db_df.drop([db_df.index[randomSongs[0]], db_df.index[randomSongs[1]], db_df.index[randomSongs[2]]])
-    db_df = db_df.reset_index(drop=True)
-    db_df = db_df.to_dict()
-    returnDict = {"ratings": [], "finalSong": [], "randomSongs": randomSongID, "dataframe":db_df}
+
+    returnDict = {"ratings": [], "finalSong": [], "randomSongs": randomSongID, "deleteTracks": randomSongs}
     return returnDict
 
 

@@ -27,58 +27,67 @@ def ep_simple():
     if request.method == "GET":
         db_df = pd.read_csv("1. Songs Analyzed.csv")
 
-        # result will be in form {"randomSongs": randomSongID, "dataframe":db_df}
         result = getRandomSongs(db_df)
 
         # now json structure should be
         # {
         # "randomSongs": [int, int, int],
-        #  "dataframe": dataFrameObject in form of dict
+        #      "deleteTracks": [
+        #         71,
+        #         232,
+        #         202
+        #     ],
         #  "ratings": []
         #  "finalSong": []
         #  }
         return jsonify(result)
 
     # receiving ratings from front-end
-    if request.method == "POST":
-        data = request.json()
+    elif request.method == "POST":
+        data = request.json
         ratings = data["ratings"]
         data["finalSong"] = ratings[0]
+
+        # delete the tracks
+        randomSongs = data["deleteTracks"]
+
+        db_df = pd.read_csv("1. Songs Analyzed.csv")
+        db_df = pd.DataFrame(db_df)
+
+        db_df = db_df.drop([db_df.index[randomSongs[0]], db_df.index[randomSongs[1]], db_df.index[randomSongs[2]]])
+        db_df = db_df.reset_index(drop=True)
 
         # now json structure should be
         # {
         # "randomSongs": [int, int, int],
-        #  "dataframe": dataFrameObject in form of dict
+        #      "deleteTracks": [
+        #         71,
+        #         232,
+        #         202
+        #     ],
         #  "ratings": [int, int, int]
         #  "finalSong": [int]
         #  }
-
         return jsonify(data)
 # endpoint where axios will make the get and post requests
 @app.route("/ep", methods=['POST', 'GET'])
 def ep():
-
     # sending random songs to front end
     if request.method == "GET":
         db_df = pd.read_csv("1. Songs Analyzed.csv")
-
-        # result will be in form {"randomSongs": randomSongID, "dataframe":db_df}
         result = getRandomSongs(db_df)
-        result["ratings"] = []
-        result["finalSong"] = []
-
-        # now json structure should be
-        # {
-        # "randomSongs": [int, int, int],
-        #  "dataframe": dataFrameObject in form of dict
-        #  "ratings": []
-        #  "finalSong": []
-        #  }
         return jsonify(result)
 
-    if request.method == "POST":
-        json_data = request.json()
+    elif request.method == "POST":
+        json_data = request.json
         ratings = json_data["ratings"]
+        # delete the tracks
+        randomSongs = json_data["deleteTracks"]
+        db_df = pd.read_csv("1. Songs Analyzed.csv")
+        db_df = pd.DataFrame(db_df)
+        db_df = db_df.drop([db_df.index[randomSongs[0]], db_df.index[randomSongs[1]], db_df.index[randomSongs[2]]])
+        db_df = db_df.reset_index(drop=True)
+
 
         endpoint = 'https://api.spotify.com/v1/audio-features/'
         track_id = json_data["randomSongs"]
@@ -151,8 +160,7 @@ def ep():
 
         # user's preferred vals
         preferred_vals = user_profile['Weighted_Values'].to_list()
-        testing_db = pd.DataFrame(json_data["dataframe"])
-        result = analyze(preferred_vals, testing_db)
+        result = analyze(preferred_vals, db_df)
         result_song_id = result['id']
 
         json_data['finalSong'] = result_song_id

@@ -161,8 +161,8 @@ def getRandomSongs(db_df):
 
 
 ## Stuff to put in git ignore file when making repo public
-client_id = 'aaf30baaa7ca45878db0454df408e8a3'
-client_secret = 'c1fd3a9cdc544005be49aef9e2ab3434'
+client_id = 'key'
+client_secret = 'key'
 
 token_url = "https://accounts.spotify.com/api/token"
 method = "POST"
